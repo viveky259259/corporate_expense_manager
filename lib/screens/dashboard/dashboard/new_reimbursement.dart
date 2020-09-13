@@ -1,6 +1,7 @@
 import 'package:corporate_expense_manager/models/reimbursement/reimbursement.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class NewReimbursement extends StatefulWidget {
@@ -136,6 +137,7 @@ class _NewReimbursementState extends State<NewReimbursement> {
                     paidInCash: paidInCash,
                     dateOfExpense: expenseDate);
                 widget.onSubmit(reimbursement);
+                Get.back(result: reimbursement);
               },
               child: Text('Add'),
             ),

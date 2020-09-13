@@ -2,7 +2,7 @@ import 'package:corporate_expense_manager/models/reimbursement/reimbursement.dar
 
 String getAllReimbursement = '''
   query Reimbursement {
-    reimbursement {
+    reimbursement(order_by: {date_of_expense: asc}) {
       ${Reimbursement.attributes}
     }
   }
@@ -10,12 +10,9 @@ String getAllReimbursement = '''
 ''';
 String getAllHRReimbursement = '''
   query Reimbursement {
-    reimbursement {
+    reimbursement(order_by: {date_of_expense: asc}) {
       ${Reimbursement.hRAttributes}
     }
   }
 
 ''';
-
-
-

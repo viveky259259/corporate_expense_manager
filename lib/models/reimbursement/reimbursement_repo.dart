@@ -54,7 +54,7 @@ class ReimbursementRepo {
   Future<bool> addReimbursement(Reimbursement reimbursement) async {
     if (reimbursement == null) return false;
     var query = mutation.addReimbursement;
-    var variables = {}..addAll(reimbursement.toJson());
+    var variables = {"reimbursement": reimbursement.toJson()};
     var headers = await UserLocal.instance.getHeaders();
 
     var result = await _apiService.mutation(query, variables, headers: headers);

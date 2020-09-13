@@ -23,20 +23,30 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       yield LoadingReimbursement();
       List<Reimbursement> reimbursements =
           await _reimbursementRepo.loadAllForMe();
-      yield LoadedReimbursement(reimbursements);
+      if (reimbursements != null)
+        yield LoadedReimbursement(reimbursements);
+      else
+        yield LoadingFailedReimbursement();
     } else if (event is LoadReimbursementsForOthers) {
       yield LoadingReimbursement();
       List<Reimbursement> reimbursements =
           await _reimbursementRepo.loadAllForOthers();
-      User user = await UserLocal.instance.getLocalUser();
-      reimbursements.removeWhere((each) => each.user.userId == user.userId);
-      yield LoadedReimbursementForOthers(reimbursements);
+      if (reimbursements != null) {
+        User user = await UserLocal.instance.getLocalUser();
+        reimbursements.removeWhere((each) => each.user.userId == user.userId);
+        yield LoadedReimbursementForOthers(reimbursements);
+      } else
+        yield LoadingFailedReimbursement();
     } else if (event is UpdateReimbursement) {
       yield LoadingReimbursement();
       await _reimbursementRepo.updateStatus(
           ReimbursementStatusHelper.getStringFromStatus(event.newStatus),
           event.reimbursement.id);
       this.add(LoadReimbursementsForOthers());
+    } else if (event is AddReimbursement) {
+      yield LoadingReimbursement();
+      await _reimbursementRepo.addReimbursement(event.reimbursement);
+      this.add(LoadReimbursementsForMe());
     }
   }
 }

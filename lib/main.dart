@@ -1,5 +1,6 @@
 import 'package:corporate_expense_manager/bloc/dashboard/dashbord_bloc.dart';
 import 'package:corporate_expense_manager/bloc/login/login_bloc.dart';
+import 'package:corporate_expense_manager/bloc/statistics/statistics_bloc.dart';
 import 'package:corporate_expense_manager/screens/app_loading/app_loading.dart';
 import 'package:corporate_expense_manager/services/hive_db.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ class App extends StatelessWidget {
           ),
           BlocProvider<DashboardBloc>(
             create: (_) => DashboardBloc(),
+          ),
+          BlocProvider<StatisticsBloc>(
+            create: (_) => StatisticsBloc(),
           )
         ],
         child: MaterialApp(

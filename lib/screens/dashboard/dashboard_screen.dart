@@ -8,6 +8,7 @@ import 'package:corporate_expense_manager/models/user/user_local.dart';
 import 'package:corporate_expense_manager/models/user/user_types.dart';
 import 'package:corporate_expense_manager/screens/dashboard/dashboard/new_reimbursement.dart';
 import 'package:corporate_expense_manager/screens/dashboard/dashboard/reimbursement_wapper.dart';
+import 'package:corporate_expense_manager/screens/statistics/statistics_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -24,12 +25,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<DashboardBloc>(context)..add(LoadReimbursementsForMe());
+      BlocProvider.of<DashboardBloc>(context).add(LoadReimbursementsForMe());
     });
   }
 
   void addNewReimbursement(Reimbursement reimbursement) {
-    print(reimbursement);
+    BlocProvider.of<DashboardBloc>(context)
+        .add(AddReimbursement(reimbursement));
   }
 
   @override
@@ -38,6 +40,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: Text('Dashboard'),
         actions: [
+          IconButton(
+            icon: Icon(Icons.equalizer),
+            onPressed: () {
+              Get.to(StatisticsScreen());
+            },
+          ),
           FutureBuilder<User>(
             future: UserLocal.instance.getLocalUser(),
             builder: (context, snapshot) {
@@ -77,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: NewReimbursement(addNewReimbursement),
                       ));
             },
-          )
+          ),
         ],
       ),
       body: BlocBuilder<DashboardBloc, DashboardState>(
@@ -100,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               state.reimbursements,
               others: true,
             );
-          } else if (state is LoadinFailedReimbursement)
+          } else if (state is LoadingFailedReimbursement)
             return Card(
               color: Colors.red.shade300,
               child: Text('Failure Detected!'),

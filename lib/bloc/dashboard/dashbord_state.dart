@@ -18,4 +18,4 @@ class LoadedReimbursementForOthers extends DashboardState {
   LoadedReimbursementForOthers(this.reimbursements);
 }
 
-class LoadinFailedReimbursement extends DashboardState {}
+class LoadingFailedReimbursement extends DashboardState {}
