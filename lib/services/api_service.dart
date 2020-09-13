@@ -1,17 +1,24 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:hasura_connect/hasura_connect.dart';
-import 'package:http/http.dart' as http;
 
 class ApiService {
   HasuraConnect hasuraConnect = HasuraConnect(
       'https://more-cub-12.hasura.app/v1/graphql',
       headers: {'x-hasura-admin-secret': 'vivek@rirev.com'});
 
-  Future<dynamic> query(query, {variables, Map<String, dynamic> headers}) async {
+  Future<dynamic> query(
+    query, {
+    variables,
+    Map<String, dynamic> headers,
+  }) async {
     if (headers != null) {
-      hasuraConnect.headers.addAll(headers);
+      headers.forEach((key, value) {
+        if (value.toString().isEmpty)
+          hasuraConnect.removeHeader(key);
+        else
+          hasuraConnect.addHeader(key, value);
+      });
     }
     variables = variables != null ? variables : <String, dynamic>{};
     var result = {};
@@ -23,8 +30,29 @@ class ApiService {
     return result['data'];
   }
 
-  Future<dynamic> mutation(query, variables, {Map<String, dynamic> headers}) async {
+  Future<dynamic> mutation(
+    query,
+    variables, {
+    Map<String, dynamic> headers,
+  }) async {
+    if (headers != null) {
+      headers.forEach((key, value) {
+        if (value.toString().isEmpty)
+          hasuraConnect.removeHeader(key);
+        else
+          hasuraConnect.addHeader(key, value);
+      });
+    }
+
     variables = variables != null ? variables : <String, dynamic>{};
+    if (headers != null) {
+      headers.forEach((key, value) {
+        if (value.toString().isEmpty)
+          hasuraConnect.removeHeader(key);
+        else
+          hasuraConnect.addHeader(key, value);
+      });
+    }
     var result = {};
     try {
       result = await hasuraConnect.mutation(query, variables: variables);
@@ -34,7 +62,8 @@ class ApiService {
     return result['data'];
   }
 
-  Stream<dynamic> subscribe(query, variables, key, {Map<String, dynamic> headers}) {
+  Stream<dynamic> subscribe(query, variables, key,
+      {Map<String, dynamic> headers}) {
     variables = variables != null ? variables : <String, dynamic>{};
 
     try {

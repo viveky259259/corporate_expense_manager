@@ -87,10 +87,12 @@ class User {
   set updatedAt(DateTime updatedAt) => _updatedAt = updatedAt;
 
   User.fromJson(Map<String, dynamic> json) {
+    if(json==null)
+      return;
     _firstName = json['first_name'];
     _lastName = json['last_name'];
-    _type = json['type'];
-    _userId = json['user_id'];
+    _type = json['type'] ?? null;
+    _userId = json['user_id'] ?? null;
     _createdAt = DateTimeService.fromString(json['created_at']);
     _updatedAt = DateTimeService.fromString(json['updated_at']);
   }

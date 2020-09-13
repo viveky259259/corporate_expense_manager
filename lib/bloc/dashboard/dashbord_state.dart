@@ -12,4 +12,10 @@ class LoadedReimbursement extends DashboardState {
   LoadedReimbursement(this.reimbursements);
 }
 
+class LoadedReimbursementForOthers extends DashboardState {
+  final List<Reimbursement> reimbursements;
+
+  LoadedReimbursementForOthers(this.reimbursements);
+}
+
 class LoadinFailedReimbursement extends DashboardState {}

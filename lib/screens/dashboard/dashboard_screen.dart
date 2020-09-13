@@ -2,6 +2,9 @@ import 'package:corporate_expense_manager/bloc/dashboard/dashbord_bloc.dart';
 import 'package:corporate_expense_manager/bloc/dashboard/dashbord_event.dart';
 import 'package:corporate_expense_manager/bloc/dashboard/dashbord_state.dart';
 import 'package:corporate_expense_manager/component/atoms/circular_progress_bar.dart';
+import 'package:corporate_expense_manager/models/user/user.dart';
+import 'package:corporate_expense_manager/models/user/user_local.dart';
+import 'package:corporate_expense_manager/models/user/user_types.dart';
 import 'package:corporate_expense_manager/screens/dashboard/dashboard/reimbursement_wapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,11 +15,13 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  bool othersActive = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<DashboardBloc>(context)..add(LoadReimbursements());
+      BlocProvider.of<DashboardBloc>(context)..add(LoadReimbursementsForMe());
     });
   }
 
@@ -25,6 +30,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),
+        actions: [
+          FutureBuilder<User>(
+            future: UserLocal.instance.getLocalUser(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done)
+                return SizedBox();
+              else if (UserTypeHelper.getTypeFromString(snapshot.data.type) ==
+                  UserType.human_resource) {
+                return IconButton(
+                  icon: Icon(Icons.swap_horiz),
+                  onPressed: () {
+                    if (othersActive) {
+                      BlocProvider.of<DashboardBloc>(context)
+                          .add(LoadReimbursementsForMe());
+                    } else {
+                      BlocProvider.of<DashboardBloc>(context)
+                          .add(LoadReimbursementsForOthers());
+                    }
+                    othersActive = !othersActive;
+                  },
+                );
+              } else
+                return SizedBox();
+            },
+          )
+        ],
       ),
       body: BlocBuilder<DashboardBloc, DashboardState>(
         bloc: BlocProvider.of<DashboardBloc>(context),
@@ -32,9 +63,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (state is LoadingReimbursement)
             return CircularProgressBarAtom();
           else if (state is LoadedReimbursement) {
+            if (state.reimbursements == null || state.reimbursements.isEmpty)
+              return Center(
+                child: Text('Nothing to show here'),
+              );
             return ReimbursementWrapper(state.reimbursements);
+          } else if (state is LoadedReimbursementForOthers) {
+            if (state.reimbursements == null || state.reimbursements.isEmpty)
+              return Center(
+                child: Text('Nothing to show here'),
+              );
+            return ReimbursementWrapper(
+              state.reimbursements,
+              others: true,
+            );
           } else if (state is LoadinFailedReimbursement)
-            return Text('Wattt');
+            return Card(
+              color: Colors.red.shade300,
+              child: Text('Failure Detected!'),
+            );
           else
             return CircularProgressBarAtom();
         },

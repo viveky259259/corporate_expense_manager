@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 
 class ReimbursementWrapper extends StatelessWidget {
   final List<Reimbursement> reimbursements;
+  final bool others;
 
-  ReimbursementWrapper(this.reimbursements);
+  ReimbursementWrapper(this.reimbursements, {this.others = false});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemBuilder: (context, index) {
-        return ReimbursementItemWidget(reimbursements[index]);
+        return ReimbursementItemWidget(
+          reimbursements[index],
+          others: others,
+        );
       },
       itemCount: reimbursements.length,
       shrinkWrap: true,

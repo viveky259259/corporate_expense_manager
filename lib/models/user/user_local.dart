@@ -1,4 +1,5 @@
 import 'package:corporate_expense_manager/models/user/user.dart';
+import 'package:corporate_expense_manager/models/user/user_types.dart';
 import 'package:hive/hive.dart';
 
 class UserLocal {
@@ -28,6 +29,18 @@ class UserLocal {
   Future<Map<String, dynamic>> getHeaders() async {
     User user = await getLocalUser();
     var header = {"x-hasura-user-id": user.userId, "x-hasura-role": user.type};
+    return header;
+  }
+
+  Future<UserType> getType() async {
+    User user = await getLocalUser();
+
+    return UserTypeHelper.getTypeFromString(user.type);
+  }
+
+  Future<Map<String, dynamic>> getEmptyHeaders() async {
+    var header = {"x-hasura-user-id": '', "x-hasura-role": ''};
+    return header;
   }
 
   Future<void> saveUser(User user) async {

@@ -29,15 +29,20 @@
 //}
 
 import 'package:corporate_expense_manager/models/attachment/attachment.dart';
+import 'package:corporate_expense_manager/models/reimbursement/status/reimbursement_status.dart';
+import 'package:corporate_expense_manager/models/user/user.dart';
 import 'package:corporate_expense_manager/services/date_time_service.dart';
 
 class Reimbursement {
+  String _id;
   int _amount;
   List<Attachment> _attachments;
   DateTime _dateOfExpense;
   String _description;
   bool _paidInCash;
   String _title;
+  ReimbursementStatus _reimbursementStatus;
+  User _user;
   static String attributes = '''
     amount
     attachments {
@@ -47,7 +52,25 @@ class Reimbursement {
     description
     paid_in_cash
     title
-
+    status
+    user {
+      ${User.attributes}
+    }
+''';
+  static String hRAttributes = '''
+    id
+    amount
+    attachments {
+      ${Attachment.attributes}
+    }
+    date_of_expense
+    description
+    paid_in_cash
+    title
+    status
+    user {
+      ${User.attributes}
+    }
 ''';
 
   Reimbursement(
@@ -56,14 +79,28 @@ class Reimbursement {
       DateTime dateOfExpense,
       String description,
       bool paidInCash,
-      String title}) {
+      String title,
+      String status}) {
     this._amount = amount;
     this._attachments = attachments;
     this._dateOfExpense = dateOfExpense;
     this._description = description;
     this._paidInCash = paidInCash;
     this._title = title;
+    this._reimbursementStatus =
+        ReimbursementStatusHelper.getStatusFromString(status);
   }
+
+  String get id => _id;
+
+  set id(String value) => _id = value;
+
+  ReimbursementStatus get reimbursementStatus => _reimbursementStatus;
+
+  User get user => _user;
+
+  set reimbursementStatus(ReimbursementStatus status) =>
+      _reimbursementStatus = status;
 
   int get amount => _amount;
 
@@ -90,6 +127,7 @@ class Reimbursement {
   set title(String title) => _title = title;
 
   Reimbursement.fromJson(Map<String, dynamic> json) {
+    _id = json['id'];
     _amount = json['amount'];
     if (json['attachments'] != null) {
       _attachments = new List<Attachment>();
@@ -101,6 +139,9 @@ class Reimbursement {
     _description = json['description'];
     _paidInCash = json['paid_in_cash'];
     _title = json['title'];
+    _reimbursementStatus =
+        ReimbursementStatusHelper.getStatusFromString(json['status']);
+    _user = User.fromJson(json['user']);
   }
 
   static List<Reimbursement> fromList(List<dynamic> jsonList) {
@@ -119,6 +160,8 @@ class Reimbursement {
     data['description'] = this._description;
     data['paid_in_cash'] = this._paidInCash;
     data['title'] = this._title;
+    data['status'] =
+        ReimbursementStatusHelper.getStringFromStatusToShow(this.reimbursementStatus);
     return data;
   }
 }
