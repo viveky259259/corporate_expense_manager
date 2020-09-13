@@ -2,12 +2,15 @@ import 'package:corporate_expense_manager/bloc/dashboard/dashbord_bloc.dart';
 import 'package:corporate_expense_manager/bloc/dashboard/dashbord_event.dart';
 import 'package:corporate_expense_manager/bloc/dashboard/dashbord_state.dart';
 import 'package:corporate_expense_manager/component/atoms/circular_progress_bar.dart';
+import 'package:corporate_expense_manager/models/reimbursement/reimbursement.dart';
 import 'package:corporate_expense_manager/models/user/user.dart';
 import 'package:corporate_expense_manager/models/user/user_local.dart';
 import 'package:corporate_expense_manager/models/user/user_types.dart';
+import 'package:corporate_expense_manager/screens/dashboard/dashboard/new_reimbursement.dart';
 import 'package:corporate_expense_manager/screens/dashboard/dashboard/reimbursement_wapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -23,6 +26,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<DashboardBloc>(context)..add(LoadReimbursementsForMe());
     });
+  }
+
+  void addNewReimbursement(Reimbursement reimbursement) {
+    print(reimbursement);
   }
 
   @override
@@ -53,6 +60,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 );
               } else
                 return SizedBox();
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8))),
+                  builder: (context) => Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: NewReimbursement(addNewReimbursement),
+                      ));
             },
           )
         ],

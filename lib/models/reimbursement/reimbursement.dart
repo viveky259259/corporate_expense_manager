@@ -160,8 +160,7 @@ class Reimbursement {
     data['description'] = this._description;
     data['paid_in_cash'] = this._paidInCash;
     data['title'] = this._title;
-    data['status'] =
-        ReimbursementStatusHelper.getStringFromStatusToShow(this.reimbursementStatus);
+
     return data;
   }
 }

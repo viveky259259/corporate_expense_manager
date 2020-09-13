@@ -13,3 +13,9 @@ class UpdateReimbursement extends DashboardEvent {
 
   UpdateReimbursement(this.reimbursement, this.newStatus);
 }
+
+class AddReimbursement extends DashboardEvent {
+  final Reimbursement reimbursement;
+
+  AddReimbursement(this.reimbursement);
+}

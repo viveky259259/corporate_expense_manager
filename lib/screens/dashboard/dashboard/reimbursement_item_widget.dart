@@ -46,54 +46,52 @@ class ReimbursementItemWidget extends StatelessWidget {
                                 3) {
                           showModalBottomSheet(
                               context: context,
-                              isScrollControlled: true,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(8),
+                                      topRight: Radius.circular(8))),
                               builder: (context) {
-                                return Wrap(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(16),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            'Update status to Processed',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1,
-                                          ),
-                                          SizedBox(
-                                            height: 24,
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: RaisedButton(
-                                              padding: EdgeInsets.all(16),
-                                              onPressed: () {
-                                                Get.back(result: true);
-                                              },
-                                              child: Text('No'),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 16,
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: RaisedButton(
-                                              padding: EdgeInsets.all(16),
-                                              onPressed: () {
-                                                Get.back(result: true);
-                                              },
-                                              child: Text('Yes'),
-                                            ),
-                                          )
-                                        ],
+                                return Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'Update status to Processed',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(
+                                        height: 24,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: RaisedButton(
+                                          padding: EdgeInsets.all(16),
+                                          onPressed: () {
+                                            Get.back(result: true);
+                                          },
+                                          child: Text('No'),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 16,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: RaisedButton(
+                                          padding: EdgeInsets.all(16),
+                                          onPressed: () {
+                                            Get.back(result: true);
+                                          },
+                                          child: Text('Yes'),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 );
                               }).then((selection) {
                             BlocProvider.of<DashboardBloc>(context).add(
